@@ -64,7 +64,7 @@ static NSMutableSet *_retainedPopupControllers;
     if (!CGSizeEqualToSize(vc.contentSizeInPopup, CGSizeZero) ||
         !CGSizeEqualToSize(vc.landscapeContentSizeInPopup, CGSizeZero)) {
         UIViewController *childViewController = self.childViewControllers.lastObject;
-        [childViewController.popupController pushViewController:vc animated:YES];
+        [childViewController.popupController pushViewController:vc animated:YES completion: nil];
     }
     else {
         [self presentViewController:vc animated:YES completion:nil];
@@ -76,7 +76,7 @@ static NSMutableSet *_retainedPopupControllers;
     if (!CGSizeEqualToSize(vc.contentSizeInPopup, CGSizeZero) ||
         !CGSizeEqualToSize(vc.landscapeContentSizeInPopup, CGSizeZero)) {
         UIViewController *childViewController = self.childViewControllers.lastObject;
-        [childViewController.popupController pushViewController:vc animated:YES];
+        [childViewController.popupController pushViewController:vc animated:YES completion: nil];
     }
     else {
         [self presentViewController:vc animated:YES completion:nil];
@@ -119,7 +119,7 @@ static NSMutableSet *_retainedPopupControllers;
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController
 {
     if (self = [self init]) {
-        [self pushViewController:rootViewController animated:NO];
+        [self pushViewController:rootViewController animated:NO completion: nil];
     }
     return self;
 }
@@ -268,7 +268,7 @@ static NSMutableSet *_retainedPopupControllers;
     }];
 }
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (!_viewControllers) {
         _viewControllers = [NSMutableArray new];
@@ -279,12 +279,12 @@ static NSMutableSet *_retainedPopupControllers;
     [_viewControllers addObject:viewController];
     
     if (self.presented) {
-        [self transitFromViewController:topViewController toViewController:viewController animated:animated];
+        [self transitFromViewController:topViewController toViewController:viewController animated:animated completion:completion];
     }
     [self setupObserversForViewController:viewController];
 }
 
-- (void)popViewControllerAnimated:(BOOL)animated
+- (void)popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (_viewControllers.count <= 1) {
         [self dismiss];
@@ -296,12 +296,12 @@ static NSMutableSet *_retainedPopupControllers;
     [_viewControllers removeObject:topViewController];
     
     if (self.presented) {
-        [self transitFromViewController:topViewController toViewController:[self topViewController] animated:animated];
+        [self transitFromViewController:topViewController toViewController:[self topViewController] animated:animated completion:completion];
     }
     topViewController.popupController = nil;
 }
 
-- (void)transitFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController animated:(BOOL)animated
+- (void)transitFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController animated:(BOOL)animated completion:(void (^)(void))completion
 {
     [fromViewController willMoveToParentViewController:nil];
     [fromViewController beginAppearanceTransition:NO animated:animated];
@@ -340,6 +340,9 @@ static NSMutableSet *_retainedPopupControllers;
             
             [fromViewController endAppearanceTransition];
             [toViewController endAppearanceTransition];
+            if (completion) {
+                completion();
+            }
         }];
         [self updateNavigationBarAniamted:animated];
     }
@@ -356,6 +359,9 @@ static NSMutableSet *_retainedPopupControllers;
         
         [fromViewController endAppearanceTransition];
         [toViewController endAppearanceTransition];
+        if (completion) {
+           completion();
+        }
     }
 }
 
@@ -558,7 +564,7 @@ static NSMutableSet *_retainedPopupControllers;
             [self dismiss];
             break;
         case STPopupLeftBarItemArrow:
-            [self popViewControllerAnimated:YES];
+            [self popViewControllerAnimated:YES completion: nil];
             break;
         default:
             break;

@@ -117,12 +117,12 @@ typedef NS_ENUM(NSUInteger, STPopupTransitionStyle) {
 /**
  Push a view controller into view controllers stack with animated flag.
  */
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
  Pop the top most view controller out of view controllers stack with animated flag.
  */
-- (void)popViewControllerAnimated:(BOOL)animated;
+- (void)popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
  Set hidden status of navigation bar with animated flag.
