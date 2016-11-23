@@ -45,7 +45,7 @@
 
 - (void)nextBtnDidTap
 {
-    [self.popupController pushViewController:[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"PopupViewController2"] animated:YES];
+    [self.popupController pushViewController:[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"PopupViewController2"] animated:YES completion:nil];
 }
 
 @end

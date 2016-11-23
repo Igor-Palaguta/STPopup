@@ -22,7 +22,7 @@
 
 - (IBAction)nextBtnDidTap
 {
-    [self.popupController pushViewController:[PopupViewController3 new] animated:YES];
+    [self.popupController pushViewController:[PopupViewController3 new] animated:YES completion:nil];
 }
 
 @end

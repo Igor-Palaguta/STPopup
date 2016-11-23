@@ -19,7 +19,7 @@
     if ([self.delegate respondsToSelector:@selector(multiSelectionViewController:didFinishWithSelections:)]) {
         [self.delegate multiSelectionViewController:self didFinishWithSelections:_mutableSelections.allObjects];
     }
-    [self.popupController popViewControllerAnimated:YES];
+    [self.popupController popViewControllerAnimated:YES completion:nil];
 }
 
 - (void)setDefaultSelections:(NSArray *)defaultSelections
