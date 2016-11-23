@@ -689,7 +689,8 @@ static NSMutableSet *_retainedPopupControllers;
     _containerView.transform = CGAffineTransformIdentity; // Set transform to identity for calculating a correct "minOffsetY"
     
     CGFloat textFieldBottomY = [currentTextInput convertPoint:CGPointZero toView:_containerViewController.view].y + currentTextInput.bounds.size.height;
-    CGFloat keyboardHeight = [_keyboardInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    CGRect keyboardRect = [_keyboardInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat keyboardHeight = keyboardRect.size.height;
     // For iOS 7
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 &&
@@ -699,11 +700,11 @@ static NSMutableSet *_retainedPopupControllers;
 
     CGFloat offsetY = 0;
     if (self.style == STPopupStyleBottomSheet) {
-        CGFloat windowTextFieldY = [currentTextInput convertPoint:CGPointZero toView:nil].y;
-        if (windowTextFieldY <= keyboardHeight) {
+        CGRect windowTextFieldRect = [currentTextInput convertRect:currentTextInput.bounds toView:nil];
+        offsetY = CGRectIntersection(windowTextFieldRect, keyboardRect).size.height;
+        if (offsetY == 0) {
             return;
         }
-        offsetY = keyboardHeight;
     }
     else {
         CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
