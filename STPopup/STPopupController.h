@@ -73,6 +73,8 @@ typedef NS_ENUM(NSUInteger, STPopupTransitionStyle) {
 
 @interface STPopupController : NSObject
 
+@property (nonatomic, copy, nullable) void (^dismissCompletion)(void);
+
 /**
  Style decides the final position of a popup.
  @see STPopupStyle

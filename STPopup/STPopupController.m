@@ -292,10 +292,13 @@ static NSMutableSet *_retainedPopupControllers;
     [self destroyObservers];
     
     [_containerViewController dismissViewControllerAnimated:YES completion:^{
-        [_retainedPopupControllers removeObject:self];
+        if (self.dismissCompletion != nil) {
+            self.dismissCompletion();
+        }
         if (completion) {
             completion();
         }
+        [_retainedPopupControllers removeObject:self];
     }];
 }
 
