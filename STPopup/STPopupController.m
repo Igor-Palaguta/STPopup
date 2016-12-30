@@ -302,20 +302,58 @@ static NSMutableSet *_retainedPopupControllers;
     }];
 }
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
-{
+- (void)pushViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion {
+    NSParameterAssert(viewControllers.count > 0);
     if (!_viewControllers) {
         _viewControllers = [NSMutableArray new];
     }
-    
+
     UIViewController *topViewController = self.topViewController;
-    viewController.popupController = self;
-    [_viewControllers addObject:viewController];
-    
+    for (UIViewController *viewController in viewControllers) {
+        viewController.popupController = self;
+    }
+    [_viewControllers addObjectsFromArray:viewControllers];
+
+    UIViewController* viewController = viewControllers.lastObject;
+
     if (self.presented) {
         [self transitFromViewController:topViewController toViewController:viewController animated:animated completion:completion];
     }
-    [self setupObserversForViewController:viewController];
+
+    for (UIViewController *viewController in viewControllers) {
+        [self setupObserversForViewController:viewController];
+    }
+}
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    [self pushViewControllers:@[viewController] animated:animated completion: completion];
+}
+
+- (void)popToViewController:(UIViewController *)controller animated:(BOOL)animated completion:(void (^)(void))completion
+{
+    NSInteger index = [_viewControllers indexOfObject: controller];
+    if (index == NSNotFound || index >= _viewControllers.count - 1) {
+        return;
+    }
+
+    NSInteger popStartIndex = index + 1;
+    NSRange poppedRange = NSMakeRange(popStartIndex, _viewControllers.count - popStartIndex);
+    NSArray* poppedControllers = [_viewControllers subarrayWithRange: poppedRange];
+
+    for (UIViewController *viewController in poppedControllers) {
+        [self destroyObserversOfViewController:viewController];
+    }
+
+    [_viewControllers removeObjectsInRange: poppedRange];
+
+    if (self.presented) {
+        [self transitFromViewController:poppedControllers.lastObject toViewController:self.topViewController animated:animated completion:completion];
+    }
+
+    for (UIViewController *viewController in poppedControllers) {
+        viewController.popupController = nil;
+    }
 }
 
 - (void)popViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion

@@ -167,9 +167,19 @@ typedef NS_ENUM(NSUInteger, STPopupTransitionStyle) {
 - (void)dismissWithCompletion:(nullable void (^)(void))completion;
 
 /**
+ Push a view controllers into view controllers stack with animated flag.
+ */
+- (void)pushViewControllers:(NSArray<UIViewController *>*)viewControllers animated:(BOOL)animated completion:(nullable void (^)(void))completion;
+
+/**
  Push a view controller into view controllers stack with animated flag.
  */
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(nullable void (^)(void))completion;
+
+/**
+ Pop view controllers out from stack with animated flag.
+ */
+- (void)popToViewController:(UIViewController *)controller animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 /**
  Pop the top most view controller out of view controllers stack with animated flag.
