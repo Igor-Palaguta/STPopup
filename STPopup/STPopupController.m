@@ -107,7 +107,7 @@ static NSMutableSet *_retainedPopupControllers;
 @implementation STPopupController
 {
     STPopupContainerViewController *_containerViewController;
-    NSMutableArray *_viewControllers; // <UIViewController>
+    NSMutableArray<UIViewController *> *_viewControllers;
     UIView *_contentView;
     UILabel *_defaultTitleLabel;
     STPopupLeftBarItem *_defaultLeftBarItem;
@@ -154,7 +154,12 @@ static NSMutableSet *_retainedPopupControllers;
 
 - (UIViewController *)topViewController
 {
-  return _viewControllers.lastObject;
+    return _viewControllers.lastObject;
+}
+
+- (NSArray<UIViewController *> *)viewControllers
+{
+    return _viewControllers;
 }
 
 - (BOOL)presented

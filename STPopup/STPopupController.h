@@ -126,6 +126,11 @@ typedef NS_ENUM(NSUInteger, STPopupTransitionStyle) {
 @property (nonatomic, strong, readonly) UIView *containerView;
 
 /**
+ *  The view controllers in the popup's controller stack.
+ */
+@property (nullable, nonatomic, strong, readonly) NSArray<UIViewController *> *viewControllers;
+
+/**
  *  The top view controller in the popup's controller stack.
  */
 @property (nullable, nonatomic, strong, readonly) UIViewController *topViewController;
