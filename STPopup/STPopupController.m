@@ -505,6 +505,7 @@ static NSMutableSet *_retainedPopupControllers;
                                                                                 attributes:_navigationBar.titleTextAttributes];
             [_defaultTitleLabel sizeToFit];
             _navigationBar.topItem.titleView = _defaultTitleLabel;
+            [_navigationBar layoutIfNeeded];
         }
     }
     _defaultLeftBarItem.tintColor = _navigationBar.tintColor;
